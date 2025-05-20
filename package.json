@@ -1,0 +1,23 @@
+{
+  "name": "kevin",
+  "version": "1.0.0",
+  "description": "aprendiendo SASS Y NPM",
+  "keywords": [
+    "SAASS",
+    "NPM",
+    "GULP"
+  ],
+  "license": "ISC",
+  "author": "Cristian",
+  "type": "commonjs",
+  "main": "index.js",
+"scripts": { 
+    "sass": "sass --watch src/SCSS:build/css" 
+  },
+  "dependencies": {
+    "sass": "^1.87.0"
+  },
+  "devDependencies": {
+    "saas": "^1.0.0"
+  }
+}

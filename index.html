@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de GPS</title>
+    <link rel="stylesheet" href="build/css/app.css">
+    <style>
+        /* Estilos para la animación */
+        .fade-out {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .logo {
+            opacity: 1; /* Comienza visible */
+            transition: opacity 1s ease; /* Transición para el desvanecimiento */
+        }
+
+        .image-container {
+            position: relative;
+            height: 100vh; /* Altura completa de la ventana */
+            overflow: hidden; /* Oculta el desbordamiento */
+            display: flex; /* Añadido para centrar la imagen */
+            justify-content: center; /* Centra horizontalmente */
+            align-items: center; /* Centra verticalmente */
+        }
+
+        .image-container img {
+            width: 47%; /* Ajusta el tamaño de la imagen */
+            height: auto; /* Mantiene la proporción */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centra la imagen */
+            border-radius: 50%; /* Hace que la imagen sea circular */
+        }
+
+        section {
+            padding-top: 100px; /* Espacio suficiente para evitar que se corte el contenido */
+            margin-top: -100px; /* Compensa el padding para que no afecte a la disposición */
+        }
+
+        .about {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="image-container">
+    <img src="src/img/Diseño sin título (2).jpg" alt="Imagen de Bienvenida" id="welcome-image">
+</div>
+
+<header>
+    <div class="header-container">
+        <h1 class="title">Tienda de GPS</h1>
+    </div>
+    <nav class="nav">
+        <a href="#home">Inicio</a>
+        <a href="#about">Acerca de</a>
+        <a href="#products">Productos</a>
+        <a href="#testimonials">Testimonios</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contacto</a>
+    </nav>
+</header>
+
+<section class="container" id="about">
+    <div class="about">
+        <h2>Acerca de</h2>
+        <p>Bienvenido a nuestra tienda de GPS. Nos especializamos en ofrecer la última tecnología en navegación y dispositivos GPS para todo tipo de aventuras. Nuestro objetivo es proporcionar productos de alta calidad y un excelente servicio al cliente.</p>
+    </div>
+</section>
+
+<main class="container" id="products">
+    <h2>Productos Destacados</h2>
+    <div class="product">
+        <img src="img/gps-product.jpg" alt="GPS Modelo X">
+        <div>
+            <h3>GPS Modelo X</h3>
+            <p>Un GPS de última generación con mapas actualizados y funciones avanzadas.</p>
+            <div class="price">$199.99</div>
+            <button>Comprar Ahora</button>
+        </div>
+    </div>
+
+    <div class="product">
+        <img src="img/gps-product2.jpg" alt="GPS Modelo Y">
+        <div>
+            <h3>GPS Modelo Y</h3>
+            <p>El GPS perfecto para tus aventuras al aire libre, resistente y confiable.</p>
+            <div class="price">$249.99</div>
+            <button>Comprar Ahora</button>
+        </div>
+    </div>
+</main>
+
+<section class="container" id="testimonials">
+    <h2>Testimonios</h2>
+    <div class="testimonial">
+        <h3>Juan Pérez</h3>
+        <p>"El GPS Modelo X me ha cambiado la vida. ¡Recomiendo esta tienda!"</p>
+    </div>
+    <div class="testimonial">
+        <h3>Ana Gómez</h3>
+        <p>"Excelente producto y servicio al cliente. ¡Muy satisfecha!"</p>
+    </div>
+</section>
+
+<section class="container" id="blog">
+    <h2>Blog</h2>
+    <article class="article">
+        <h3>Consejos de Navegación</h3>
+        <p>Aprende a utilizar tu GPS de manera efectiva con nuestros consejos prácticos.</p>
+    </article>
+    <article class="article">
+        <h3>Actualizaciones de Productos</h3>
+        <p>Descubre las últimas novedades sobre nuestros modelos de GPS.</p>
+    </article>
+</section>
+
+<section class="container">
+    <h2>Galería de Imágenes</h2>
+    <div class="gallery">
+        <img src="img/gallery1.jpg" alt="GPS en uso 1">
+        <img src="img/gallery2.jpg" alt="GPS en uso 2">
+        <img src="img/gallery3.jpg" alt="GPS en uso 3">
+    </div>
+</section>
+
+<section class="container" id="faq">
+    <h2>Preguntas Frecuentes</h2>
+    <div class="faq">
+        <h3>¿Cuál es la política de devolución?</h3>
+        <p>Puedes devolver el producto dentro de los 30 días si no estás satisfecho.</p>
+    </div>
+    <div class="faq">
+        <h3>¿Ofrecen envío gratuito?</h3>
+        <p>Sí, ofrecemos envío gratuito en pedidos superiores a $100.</p>
+    </div>
+</section>
+
+<section class="container newsletter">
+    <h2>Suscríbete a nuestro boletín</h2>
+    <p>Recibe ofertas y novedades directamente en tu correo.</p>
+    <input type="email" placeholder="Tu correo electrónico">
+    <button>Suscribirse</button>
+</section>
+
+<section class="container social-media">
+    <h2>Síguenos en Redes Sociales</h2>
+    <a href="#">Facebook</a>
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+</section>
+
+<footer>
+    <p>&copy; 2025 Tienda de GPS. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    // Script para desvanecer la imagen al desplazarse
+    window.addEventListener('scroll', function() {
+        const welcomeImage = document.getElementById('welcome-image');
+        const scrollPosition = window.scrollY;
+
+        if (scrollPosition > 50) {
+            welcomeImage.classList.add('fade-out');
+        } else {
+            welcomeImage.classList.remove('fade-out');
+        }
+    });
+</script>
+
+</body>
+</html>
