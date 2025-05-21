@@ -4,95 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Registro</title>
+  <link rel="stylesheet" href="app.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-      margin: 0;
-    }
-
     .register-container {
-      background-color: white;
+      background-color: rgba(20, 20, 30, 0.85);
       padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #0ff, 0 0 10px #0ff inset;
       max-width: 400px;
+      margin: 40px auto;
       text-align: center;
-      margin-bottom: 30px;
     }
 
     h2 {
-      color: #007bff;
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff;
       margin-bottom: 20px;
     }
 
-    input {
+    input, button {
       width: 90%;
       padding: 12px;
       margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1em;
-    }
-
-    button {
-      width: 95%;
-      padding: 12px;
-      background-color: #007bff;
-      color: white;
       border: none;
       border-radius: 8px;
       font-size: 1em;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input {
+      background-color: #111;
+      color: #0ff;
+      box-shadow: 0 0 5px #0ff inset;
+    }
+
+    input::placeholder {
+      color: #08f;
+    }
+
+    button {
+      background: linear-gradient(90deg, #00f0ff, #0ff);
+      color: #000;
+      font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s ease;
-      margin-top: 10px;
+      text-shadow: none;
     }
 
     button:hover {
-      background-color: #0056b3;
+      background: linear-gradient(90deg, #0ff, #00f0ff);
+      box-shadow: 0 0 10px #0ff;
     }
 
     #register-message {
-      margin-top: 15px;
+      margin-top: 10px;
       font-size: 0.95em;
+      color: #0ff;
     }
 
-    .user-list-container {
-      width: 100%;
-      max-width: 400px;
-      background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      display: none;
+    .link-button {
+      margin-top: 10px;
+      display: inline-block;
+      text-decoration: none;
+      background: linear-gradient(90deg, #00f0ff, #0ff);
+      color: #000;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
     }
 
-    .user-list-container h3 {
-      text-align: center;
-      margin-bottom: 15px;
-      color: #333;
-    }
-
-    .user-list {
-      list-style: none;
-      padding: 0;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .user-list li {
-      padding: 8px 10px;
-      border-bottom: 1px solid #ddd;
-      font-size: 0.95em;
-    }
-
-    .user-list li:last-child {
-      border-bottom: none;
+    .link-button:hover {
+      background: linear-gradient(90deg, #0ff, #00f0ff);
+      box-shadow: 0 0 10px #0ff;
     }
   </style>
 </head>
@@ -105,13 +89,9 @@
       <input type="password" id="register-password" placeholder="Contraseña" required><br>
       <button type="submit">Registrar</button>
     </form>
-    <button onclick="toggleUserList()">Ver Usuarios Registrados</button>
-    <p id="register-message"></p>
-  </div>
 
-  <div class="user-list-container" id="user-list-container">
-    <h3>Usuarios Registrados</h3>
-    <ul class="user-list" id="user-list"></ul>
+    <a href="editar.html" class="link-button">Editar Usuario</a>
+    <p id="register-message"></p>
   </div>
 
   <script>
@@ -133,56 +113,14 @@
         return;
       }
 
-      // Guardar usuario en localStorage
       localStorage.setItem(username, JSON.stringify({ password }));
 
-      // Actualizar la lista de usuarios
-      updateUserList();
-
-      message.style.color = "green";
+      message.style.color = "#0f0";
       message.textContent = "¡Usuario registrado correctamente! Redirigiendo...";
 
       setTimeout(() => {
-        window.location.href = "index.html"; // Redirigir al inicio
+        window.location.href = "editar.html";
       }, 1000);
-    }
-
-    function getAllUsers() {
-      const users = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        try {
-          const user = JSON.parse(localStorage.getItem(key));
-          if (user && user.password) {
-            users.push(key);
-          }
-        } catch (e) {
-          // Ignorar entradas no válidas
-        }
-      }
-      return users;
-    }
-
-    function updateUserList() {
-      const userListEl = document.getElementById('user-list');
-      userListEl.innerHTML = "";
-      const users = getAllUsers();
-      users.forEach(user => {
-        const li = document.createElement('li');
-        li.textContent = user;
-        userListEl.appendChild(li);
-      });
-    }
-
-    function toggleUserList() {
-      const container = document.getElementById('user-list-container');
-      const visible = container.style.display === "block";
-      if (!visible) {
-        updateUserList();
-        container.style.display = "block";
-      } else {
-        container.style.display = "none";
-      }
     }
   </script>
 

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editar Usuario</title>
+  <link rel="stylesheet" href="app.css">
+  <style>
+    .edit-container {
+      background-color: rgba(20, 20, 30, 0.85);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #0ff, 0 0 10px #0ff inset;
+      max-width: 400px;
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    h2 {
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff;
+      margin-bottom: 20px;
+    }
+
+    input, button, .link-button {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input {
+      background-color: #111;
+      color: #0ff;
+      box-shadow: 0 0 5px #0ff inset;
+    }
+
+    input::placeholder {
+      color: #08f;
+    }
+
+    button {
+      background: linear-gradient(90deg, #00f0ff, #0ff);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover, .link-button:hover {
+      background: linear-gradient(90deg, #0ff, #00f0ff);
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    #edit-message {
+      margin-top: 10px;
+      font-size: 0.95em;
+      color: #0ff;
+    }
+
+    .link-button {
+      display: inline-block;
+      text-align: center;
+      background: linear-gradient(90deg, #00f0ff, #0ff);
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="edit-container">
+    <h2>Editar Usuario</h2>
+
+    <input type="text" id="old-username" placeholder="Usuario actual" required>
+    <input type="text" id="new-username" placeholder="Nuevo usuario">
+    <input type="password" id="new-password" placeholder="Nueva contraseña">
+    <button onclick="updateUser()">Actualizar</button>
+
+    <a href="index.html" class="link-button">Volver al Inicio</a>
+
+    <p id="edit-message"></p>
+  </div>
+
+  <script>
+    function updateUser() {
+      const oldUsername = document.getElementById('old-username').value.trim();
+      const newUsername = document.getElementById('new-username').value.trim();
+      const newPassword = document.getElementById('new-password').value.trim();
+      const message = document.getElementById('edit-message');
+
+      if (!oldUsername) {
+        message.style.color = "red";
+        message.textContent = "Debes ingresar tu nombre de usuario actual.";
+        return;
+      }
+
+      const userData = localStorage.getItem(oldUsername);
+      if (!userData) {
+        message.style.color = "red";
+        message.textContent = "El usuario no existe.";
+        return;
+      }
+
+      const updatedData = {
+        password: newPassword || JSON.parse(userData).password
+      };
+
+      const finalUsername = newUsername || oldUsername;
+
+      if (newUsername && newUsername !== oldUsername) {
+        if (localStorage.getItem(newUsername)) {
+          message.style.color = "red";
+          message.textContent = "El nuevo usuario ya existe.";
+          return;
+        }
+        localStorage.removeItem(oldUsername);
+      }
+
+      localStorage.setItem(finalUsername, JSON.stringify(updatedData));
+
+      message.style.color = "#0f0";
+      message.textContent = "¡Usuario actualizado correctamente!";
+    }
+  </script>
+
+</body>
+</html>

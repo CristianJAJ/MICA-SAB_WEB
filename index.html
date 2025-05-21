@@ -1,205 +1,101 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda de GPS</title>
-    <link rel="stylesheet" href="build/css/app.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MICA-SAB</title>
+  <link rel="stylesheet" href="build/css/app.css">
 </head>
-<script>
-    function loginUser(event) {
-        event.preventDefault();
-        const username = document.getElementById('login-username').value;
-        const password = document.getElementById('login-password').value;
-
-        const storedUser = JSON.parse(localStorage.getItem(username));
-
-        const message = document.getElementById('login-message');
-
-        if (storedUser && storedUser.password === password) {
-            // Guardamos al usuario actual
-            localStorage.setItem("currentUser", username);
-            // Redirigimos al dashboard
-            window.location.href = "dashboard.html";
-        } else {
-            message.style.color = "red";
-            message.textContent = "Usuario o contraseña incorrectos.";
-        }
-    }
-</script>
 <body>
-
-<div class="image-container">
-    <img src="src/img/Diseño sin título (2).jpg" alt="Imagen de Bienvenida" id="welcome-image">
-</div>
-
-<header>
-    <div class="header-container">
-        <h1 class="title">MICA-SAB</h1>
-    </div>
+  <header>
+    <h1 class="neon-title">MICA-SAB</h1>
     <nav class="nav">
-        <a href="#welcome-image">Inicio</a>
-        <a href="#about">Acerca de Nosotros</a>
-        <a href="#products">Productos</a>
-        <a href="#testimonials">Testimonios</a>
-        <a href="#blog">Blog</a>
-        <a href="#contact">Contacto</a>
+      <a href="#about">Acerca</a>
+      <a href="#products">Productos</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#testimonials">Testimonios</a>
+      <a href="#contacto">contacto</a>
+      <a href="#login">Login</a>
     </nav>
-</header>
+  </header>
 
-<section class="container" id="about">
-    <h2>Acerca de Nosotros</h2>
-    <div class="testimonial">
-        <p>Somos un equipo multidisciplinario de estudiantes y profesionales apasionados por la innovación tecnológica con impacto social. Desde el Tecnológico Nacional de México, campus Occidente del Estado de Hidalgo, hemos unido nuestros conocimientos en ingeniería electrónica, desarrollo de software y gestión ambiental para crear MICA-SAB, una solución que combina lo último en IoT, sustentabilidad y seguridad acuática.</p>
-    </div>
-    <h2>Misión</h2>
-    <div class="testimonial">
-        <p>Desarrollar tecnología accesible y escalable que resuelva problemas reales en la gestión del agua, mejorando tanto la experiencia turística como la conservación de recursos naturales.</p>
-    </div>
-    <h2>Vición</h2>
-    <div class="testimonial">
-        <p>Para el 2030, MICA-SAB IoT será reconocido como el sistema líder en Latinoamérica para la gestión inteligente y sostenible de espacios acuáticos, integrando tecnología IoT de vanguardia con impacto social y ambiental. Nos visualizamos:</p>
-    </div>
-</section>
+  <main>
+    <section class="hero">
+      <img src="src/img/Diseño sin título (2).jpg" alt="MICA-SAB" class="logo-img">
+    </section>
 
-<main class="container" id="products">
-    <h2>Productos Destacados</h2>
-    <div class="product">
-        <img src="img/gps-product.jpg" alt="GPS Modelo X">
-        <div>
-            <h3>MICA-SAB Modelo X</h3>
-            <p>Un GPS de última generación con mapas actualizados y funciones avanzadas.</p>
-            <div class="price">$199.99</div>
-            <button>Comprar Ahora</button>
+    <section id="about" class="glass-section">
+      <h2>Acerca de Nosotros</h2>
+      <p>Somos un equipo multidisciplinario de estudiantes y profesionales apasionados por la innovación tecnológica con impacto social.</p>
+    </section>
+
+    <section id="products" class="glass-section">
+      <h2>Productos Destacados</h2>
+      <div class="card-grid">
+        <div class="neon-card">
+          <h3>Modelo X</h3>
+          <p>GPS de última generación.</p>
         </div>
-    </div>
-
-    <div class="product">
-        <img src="img/gps-product2.jpg" alt="GPS Modelo Y">
-        <div>
-            <h3>MICA-SAB Modelo Y</h3>
-            <p>El GPS perfecto para tus aventuras al aire libre, resistente y confiable.</p>
-            <div class="price">$249.99</div>
-            <button>Comprar Ahora</button>
+        <div class="neon-card">
+          <h3>Modelo Y</h3>
+          <p>GPS resistente y confiable.</p>
         </div>
-    </div>
-</main>
+      </div>
+    </section>
 
-<section class="container" id="dashboard">
-    <h2>Panel de Control</h2>
-    <div class="dashboard-section">
-        <p>Aquí puedes visualizar estadísticas, métricas clave y otra información relevante.</p>
+    <section id="dashboard" class="glass-section">
+      <h2>Panel de Control</h2>
+      <div class="dashboard-grid">
+        <div class="neon-card">Ventas Totales: $12,450</div>
+        <div class="neon-card">Dispositivos Activos: 320</div>
+        <div class="neon-card">Usuarios: 1,025</div>
+        <div class="neon-card">Reembolsos: $340</div>
+      </div>
+    </section>
 
-        <!-- Espacio para insertar tu dashboard (gráficas, tarjetas, etc.) -->
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <h3>Ventas Totales</h3>
-                <p>$12,450</p>
-            </div>
-            <div class="dashboard-card">
-                <h3>Dispositivos Activos</h3>
-                <p>320</p>
-            </div>
-            <div class="dashboard-card">
-                <h3>Usuarios Registrados</h3>
-                <p>1,025</p>
-            </div>
-            <div class="dashboard-card">
-                <h3>Reembolsos</h3>
-                <p>$340</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<section class="container" id="testimonials">
-    <h2>Testimonios</h2>
-    <div class="testimonial">
-        <h3>Juan Pérez</h3>
-        <p>"El GPS Modelo X me ha cambiado la vida. ¡Recomiendo esta tienda!"</p>
-    </div>
-    <div class="testimonial">
-        <h3>Ana Gómez</h3>
-        <p>"Excelente producto y servicio al cliente. ¡Muy satisfecha!"</p>
-    </div>
-</section>
-
-<section class="container" id="blog">
-    <h2>Blog</h2>
-    <article class="article">
-        <h3>Consejos de Navegación</h3>
-        <p>Aprende a utilizar tu GPS de manera efectiva con nuestros consejos prácticos.</p>
-    </article>
-    <article class="article">
-        <h3>Actualizaciones de Productos</h3>
-        <p>Descubre las últimas novedades sobre nuestros modelos de GPS.</p>
-    </article>
-</section>
-
-<section class="container">
-    <h2>Galería de Imágenes</h2>
-    <div class="gallery">
-        <img src="img/gallery1.jpg" alt="GPS en uso 1">
-        <img src="img/gallery2.jpg" alt="GPS en uso 2">
-        <img src="img/gallery3.jpg" alt="GPS en uso 3">
-    </div>
-</section>
-
-<section class="container" id="faq">
-    <h2>Preguntas Frecuentes</h2>
-    <div class="faq">
-        <h3>¿Cuál es la política de devolución?</h3>
-        <p>Puedes devolver el producto dentro de los 30 días si no estás satisfecho.</p>
-    </div>
-    <div class="faq">
-        <h3>¿Ofrecen envío gratuito?</h3>
-        <p>Sí, ofrecemos envío gratuito en pedidos superiores a $100.</p>
-    </div>
-</section>
-
-<section class="container login-section">
-    <h2>LOGIN</h2>
-    <p>Accede a tu cuenta o regístrate para comenzar.</p>
-    <div class="login-buttons">
+    <section id="login" class="glass-section">
+      <h2>Login</h2>
+      <div class="login-buttons">
         <button onclick="window.location.href='register.html'">Registrar</button>
         <button onclick="document.getElementById('login-form').style.display = 'block'">Iniciar Sesión</button>
-    </div>
+      </div>
 
-    <form id="login-form" class="login-form" style="display: none;" onsubmit="loginUser(event)">
+      <form id="login-form" onsubmit="loginUser(event)" style="display: none;">
         <input type="text" id="login-username" placeholder="Usuario" required>
         <input type="password" id="login-password" placeholder="Contraseña" required>
         <button type="submit">Entrar</button>
         <p id="login-message"></p>
-    </form>
-</section>
+      </form>
+    </section>
+<section id="contacto" class="glass-section">
+      <h2>Contáctanos</h2>
+      <form class="formulario-contacto" onsubmit="enviarFormulario(event)">
+        <input type="text" placeholder="Tu nombre" required>
+        <input type="email" placeholder="Tu correo electrónico" required>
+        <textarea placeholder="Tu mensaje" rows="4" required></textarea>
+        <button type="submit">Enviar</button>
+        <p id="mensaje-confirmacion"></p>
+      </form>
+    </section>
+    <footer>
+      <p>&copy; 2025 MICA-SAB. Todos los derechos reservados.</p>
+    </footer>
+  </main>
 
-
-<section class="container social-media">
-    <h2>Síguenos en Redes Sociales</h2>
-    <a href="#">Facebook</a>
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-</section>
-
-<footer>
-    <p>&copy; 2025 Tienda de GPS. Todos los derechos reservados.</p>
-</footer>
-
-<script>
-    window.addEventListener('scroll', function() {
-        const welcomeImage = document.getElementById('welcome-image');
-        const scrollPosition = window.scrollY;
-
-        if (scrollPosition > 50) {
-            welcomeImage.classList.add('fade-out');
-        } else {
-            welcomeImage.classList.remove('fade-out');
-        }
-    });
-</script>
-
-
-
+  <script>
+    function loginUser(event) {
+      event.preventDefault();
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const storedUser = JSON.parse(localStorage.getItem(username));
+      const message = document.getElementById('login-message');
+      if (storedUser && storedUser.password === password) {
+        localStorage.setItem("currentUser", username);
+        window.location.href = "dashboard.html";
+      } else {
+        message.textContent = "Usuario o contraseña incorrectos.";
+      }
+    }
+  </script>
 </body>
 </html>
