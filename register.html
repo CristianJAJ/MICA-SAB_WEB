@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      margin: 0;
+    }
+
+    .register-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      width: 95%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #register-message {
+      margin-top: 15px;
+      font-size: 0.95em;
+    }
+
+    .user-list-container {
+      width: 100%;
+      max-width: 400px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      display: none;
+    }
+
+    .user-list-container h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .user-list {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .user-list li {
+      padding: 8px 10px;
+      border-bottom: 1px solid #ddd;
+      font-size: 0.95em;
+    }
+
+    .user-list li:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <h2>Registro de Usuario</h2>
+    <form onsubmit="registerUser(event)">
+      <input type="text" id="register-username" placeholder="Usuario" required><br>
+      <input type="password" id="register-password" placeholder="Contraseña" required><br>
+      <button type="submit">Registrar</button>
+    </form>
+    <button onclick="toggleUserList()">Ver Usuarios Registrados</button>
+    <p id="register-message"></p>
+  </div>
+
+  <div class="user-list-container" id="user-list-container">
+    <h3>Usuarios Registrados</h3>
+    <ul class="user-list" id="user-list"></ul>
+  </div>
+
+  <script>
+    function registerUser(event) {
+      event.preventDefault();
+      const username = document.getElementById('register-username').value.trim();
+      const password = document.getElementById('register-password').value.trim();
+      const message = document.getElementById('register-message');
+
+      if (!username || !password) {
+        message.style.color = "red";
+        message.textContent = "Todos los campos son obligatorios.";
+        return;
+      }
+
+      if (localStorage.getItem(username)) {
+        message.style.color = "red";
+        message.textContent = "Este usuario ya existe.";
+        return;
+      }
+
+      // Guardar usuario en localStorage
+      localStorage.setItem(username, JSON.stringify({ password }));
+
+      // Actualizar la lista de usuarios
+      updateUserList();
+
+      message.style.color = "green";
+      message.textContent = "¡Usuario registrado correctamente! Redirigiendo...";
+
+      setTimeout(() => {
+        window.location.href = "index.html"; // Redirigir al inicio
+      }, 1000);
+    }
+
+    function getAllUsers() {
+      const users = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        try {
+          const user = JSON.parse(localStorage.getItem(key));
+          if (user && user.password) {
+            users.push(key);
+          }
+        } catch (e) {
+          // Ignorar entradas no válidas
+        }
+      }
+      return users;
+    }
+
+    function updateUserList() {
+      const userListEl = document.getElementById('user-list');
+      userListEl.innerHTML = "";
+      const users = getAllUsers();
+      users.forEach(user => {
+        const li = document.createElement('li');
+        li.textContent = user;
+        userListEl.appendChild(li);
+      });
+    }
+
+    function toggleUserList() {
+      const container = document.getElementById('user-list-container');
+      const visible = container.style.display === "block";
+      if (!visible) {
+        updateUserList();
+        container.style.display = "block";
+      } else {
+        container.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>

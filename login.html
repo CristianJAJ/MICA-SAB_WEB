@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iniciar Sesión</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      width: 95%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    .extra-buttons {
+      margin-top: 20px;
+    }
+
+    .extra-buttons button {
+      background-color: #6c757d;
+    }
+
+    .extra-buttons button:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="username" placeholder="Nombre de usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button onclick="login()">Iniciar Sesión</button>
+    <div id="error"></div>
+
+    <div class="extra-buttons">
+      <button onclick="location.href='register.html'">Registrarse</button>
+      <button onclick="verUsuarios()">Ver Usuarios Registrados</button>
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const error = document.getElementById("error");
+
+      if (!username || !password) {
+        error.textContent = "Todos los campos son obligatorios.";
+        return;
+      }
+
+      const userData = JSON.parse(localStorage.getItem(username));
+
+      if (!userData || userData.password !== password) {
+        error.textContent = "Usuario o contraseña incorrectos.";
+        return;
+      }
+
+      localStorage.setItem("loggedInUser", username);
+      window.location.href = "dashboard.html";
+    }
+
+    function verUsuarios() {
+      const usuarios = [];
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key !== "loggedInUser") {
+          try {
+            const data = JSON.parse(localStorage.getItem(key));
+            if (data && data.password) {
+              usuarios.push(key);
+            }
+          } catch (e) {}
+        }
+      }
+
+      if (usuarios.length === 0) {
+        alert("No hay usuarios registrados.");
+      } else {
+        alert("Usuarios registrados:\n- " + usuarios.join("\n- "));
+      }
+    }
+  </script>
+
+</body>
+</html>
