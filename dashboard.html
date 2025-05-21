@@ -2,111 +2,331 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard del Usuario</title>
+  <title>Dashboard MICA-SAB IoT</title>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Rubik', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #e0e6f3;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 50px;
+      letter-spacing: 2px;
+      text-shadow:
+        0 0 5px #00ffe7,
+        0 0 10px #00ffe7,
+        0 0 20px #00ffe7,
+        0 0 40px #00ffe7;
     }
 
-    .dashboard-container {
-      background-color: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    /* Container flex grid */
+    .gauge-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 48px;
       width: 100%;
-      max-width: 500px;
+      max-width: 1080px;
+      padding: 0 10px;
+      margin-bottom: 50px;
+    }
+
+    /* Card neumorphic style */
+    .card {
+      background: #1f2a49;
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow:
+        inset 8px 8px 16px #19243b,
+        inset -8px -8px 16px #2a395a,
+        8px 8px 20px #132038;
       text-align: center;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
     }
-
-    h2 {
-      color: #007bff;
-      margin-bottom: 20px;
-    }
-
-    .info {
-      margin: 15px 0;
-      font-size: 1.2em;
-    }
-
-    button {
-      padding: 12px 25px;
-      margin: 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1em;
+    .card:hover {
+      transform: translateY(-12px) scale(1.05);
+      box-shadow:
+        inset 10px 10px 20px #1d2e53,
+        inset -10px -10px 30px #334775,
+        0 15px 30px #00ffe7aa;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
 
-    button:hover {
-      background-color: #0056b3;
+    /* Gauge styling */
+    .gauge {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 25px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, #253759 70%, #1a2542 100%);
+      box-shadow:
+        inset 8px 8px 12px #121f38,
+        inset -8px -8px 12px #32497a;
+      position: relative;
+      border: 12px solid #00ffe7;
+      filter: drop-shadow(0 0 8px #00ffe7aa);
     }
 
-    .danger {
-      background-color: #dc3545;
+    /* Needle */
+    .needle {
+      width: 60%;
+      height: 6px;
+      border-radius: 3px;
+      background: #00ffe7;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: left center;
+      transform: rotate(0deg);
+      transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      box-shadow:
+        0 0 12px #00ffe7;
+    }
+    
+    /* Needle colors override */
+    .verde { background-color: #32ffa8; box-shadow: 0 0 14px #32ffa8;}
+    .rojo { background-color: #ff6b6b; box-shadow: 0 0 14px #ff6b6b;}
+    .azul { background-color: #5599ff; box-shadow: 0 0 14px #5599ff;}
+
+    /* Labels */
+    .label {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #00ffe7;
+      text-shadow: 0 0 4px #00ffe7aa;
+      margin-bottom: 8px;
+      user-select: none;
     }
 
-    .danger:hover {
-      background-color: #c82333;
+    /* Status message */
+    #tempStatusMsg, #phStatusMsg {
+      font-size: 1rem;
+      color: #a8c4ff;
+      font-style: italic;
+      margin-top: 6px;
+      user-select: none;
+      min-height: 1.3em;
+    }
+
+    /* Logo card */
+    .logo-card {
+      background: transparent;
+      box-shadow: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      border-radius: 50%;
+      filter: drop-shadow(0 0 12px #00ffe7);
+      cursor: default;
+      user-select: none;
+    }
+    .logo-card img {
+      width: 140px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid #00ffe7;
+      transition: transform 0.3s ease;
+    }
+    .logo-card img:hover {
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    /* Alert box */
+    #alertBox {
+      width: 90%;
+      max-width: 640px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      padding: 22px 30px;
+      border-radius: 30px;
+      text-align: center;
+      user-select: none;
+      letter-spacing: 1.2px;
+      box-shadow:
+        0 0 18px #00ffe7bb;
+      transition: all 0.4s ease;
+      cursor: default;
+      text-transform: uppercase;
+      font-family: 'Rubik', sans-serif;
+      background: #0f1a2b;
+      border: 3px solid transparent;
+    }
+    .NORMAL {
+      color: #32ffa8;
+      border-color: #32ffa8;
+      background: linear-gradient(145deg, #09211a, #0c3929);
+      box-shadow: 0 0 15px #32ffa8cc;
+    }
+    .ACTIVA {
+      color: #ff6b6b;
+      border-color: #ff6b6b;
+      background: linear-gradient(145deg, #3a0e0e, #6a1a1a);
+      box-shadow: 0 0 18px #ff6b6bcc;
+      animation: pulseAlert 2s infinite ease-in-out;
+    }
+    @keyframes pulseAlert {
+      0%, 100% {
+        box-shadow: 0 0 18px #ff6b6bcc;
+      }
+      50% {
+        box-shadow: 0 0 30px #ff3b3bcc;
+      }
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.4rem;
+        margin-bottom: 35px;
+      }
+      .gauge {
+        width: 180px;
+        height: 180px;
+        border-width: 10px;
+      }
+      .card {
+        padding: 30px 20px;
+      }
     }
   </style>
 </head>
 <body>
+  <h1>MICA-SAB IoT Dashboard</h1>
 
-  <div class="dashboard-container">
-    <h2>Bienvenido al Dashboard</h2>
-    <div class="info"><strong>Usuario:</strong> <span id="username"></span></div>
-    <div class="info"><strong>Contraseña:</strong> <span id="password"></span></div>
+  <div class="gauge-container">
+    <!-- pH -->
+    <div class="card" aria-label="Medidor de pH">
+      <div class="gauge" id="phGauge" role="img" aria-live="polite" aria-atomic="true">
+        <div class="needle" id="phNeedle"></div>
+      </div>
+      <div class="label">pH: <span id="phValue">--</span></div>
+      <div id="phStatusMsg">--</div>
+    </div>
 
-    <button onclick="editUser()">Editar Usuario</button>
-    <button onclick="logout()" class="danger">Cerrar Sesión</button>
+    <!-- Logo circular -->
+    <div class="card logo-card" aria-label="Logo MICA-SAB IoT">
+      <img src="/src/img/Diseño sin título (2).jpg" alt="Logo MICA-SAB IoT" />
+    </div>
+
+    <!-- Temperatura -->
+    <div class="card" aria-label="Medidor de temperatura">
+      <div class="gauge" id="tempGauge" role="img" aria-live="polite" aria-atomic="true">
+        <div class="needle" id="tempNeedle"></div>
+      </div>
+      <div class="label">Temperatura (°C): <span id="tempValue">--</span></div>
+      <div id="tempStatusMsg">--</div>
+    </div>
   </div>
 
+  <!-- Estado de botón -->
+  <div id="alertBox" class="NORMAL" role="alert" aria-live="assertive" aria-atomic="true">Estado: --</div>
+
   <script>
-    const user = localStorage.getItem("loggedInUser");
+    const brokerUrl = "wss://test.mosquitto.org:8081/mqtt";
+    const topic = "micasab/sensores/datos";
 
-    if (!user) {
-      alert("Primero debes iniciar sesión.");
-      location.href = "login.html";
-    }
+    const client = mqtt.connect(brokerUrl);
 
-    const userData = JSON.parse(localStorage.getItem(user));
+    client.on('connect', () => {
+      console.log('Conectado a MQTT broker');
+      client.subscribe(topic, (err) => {
+        if (!err) {
+          console.log(`Suscrito a topic: ${topic}`);
+        }
+      });
+    });
 
-    document.getElementById("username").textContent = user;
-    document.getElementById("password").textContent = userData.password;
+    client.on('message', (topic, message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        updateGauge('ph', data.ph);
+        updateGauge('temp', data.temp);
+        updateAlert(data.alerta);
+      } catch (e) {
+        console.error("Error procesando el mensaje:", e);
+      }
+    });
 
-    function editUser() {
-      const newUsername = prompt("Nuevo nombre de usuario:", user);
-      const newPassword = prompt("Nueva contraseña:", userData.password);
+    function updateGauge(type, value) {
+      if (type === 'ph') {
+        const angle = mapRange(value, 0, 14, 0, 180);
+        const needle = document.getElementById('phNeedle');
+        needle.style.transform = `rotate(${angle}deg)`;
+        document.getElementById('phValue').innerText = value.toFixed(2);
 
-      if (newUsername && newPassword) {
-        // Eliminar el usuario anterior
-        localStorage.removeItem(user);
-        // Guardar los nuevos datos
-        localStorage.setItem(newUsername, JSON.stringify({ password: newPassword }));
-        // Guardar la sesión con el nuevo nombre
-        localStorage.setItem("loggedInUser", newUsername);
+        needle.classList.remove('rojo', 'verde', 'azul');
+        let phMsg = '';
+        if (value < 6.5) {
+          needle.classList.add('rojo');
+          phMsg = 'pH ácido';
+        } else if (value <= 7.5) {
+          needle.classList.add('verde');
+          phMsg = 'pH neutro';
+        } else {
+          needle.classList.add('azul');
+          phMsg = 'pH alcalino';
+        }
+        document.getElementById('phStatusMsg').innerText = phMsg;
+      }
 
-        alert("Datos actualizados correctamente.");
-        location.href = "index.html"; // Redirige al inicio
-      } else {
-        alert("Los campos no pueden estar vacíos.");
+      if (type === 'temp') {
+        const angle = mapRange(value, 0, 50, 0, 180);
+        const needle = document.getElementById('tempNeedle');
+        needle.style.transform = `rotate(${angle}deg)`;
+        document.getElementById('tempValue').innerText = value.toFixed(1);
+
+        needle.classList.remove('rojo', 'verde');
+        let tempMsg = '';
+        if (value < 26) {
+          needle.classList.add('rojo');
+          tempMsg = 'Temperatura baja';
+        } else if (value <= 45) {
+          needle.classList.add('verde');
+          tempMsg = 'Temperatura normal';
+        } else {
+          needle.classList.add('rojo');
+          tempMsg = 'Temperatura alta';
+        }
+        document.getElementById('tempStatusMsg').innerText = tempMsg;
       }
     }
 
-    function logout() {
-      localStorage.removeItem("loggedInUser");
-      location.href = "index.html";
+    function updateAlert(status) {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.innerText = `Estado: ${status}`;
+      if (status === "ACTIVA") {
+        alertBox.classList.remove('NORMAL');
+        alertBox.classList.add('ACTIVA');
+      } else {
+        alertBox.classList.remove('ACTIVA');
+        alertBox.classList.add('NORMAL');
+      }
+    }
+
+    function mapRange(value, inMin, inMax, outMin, outMax) {
+      return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
   </script>
-
 </body>
 </html>
